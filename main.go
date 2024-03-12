@@ -11,6 +11,7 @@ type Game struct {
 	CurrentLevel *Level
 	Entities     []Entity
 	Player       *Entity
+	TickCount    int
 }
 
 // Creates a new Game object and initializes the data.
@@ -18,6 +19,7 @@ func NewGame() *Game {
 	g := &Game{}
 	g.Levels = append(g.Levels, NewLevel())
 	g.CurrentLevel = &g.Levels[0]
+	g.TickCount = 0
 
 	startX, startY := g.CurrentLevel.Rooms[0].Center()
 	player, err := NewEntity(startX, startY, "player")
@@ -30,7 +32,12 @@ func NewGame() *Game {
 }
 
 func (g *Game) Update() error {
-	HandleInput(g)
+	g.TickCount++
+
+	if g.TickCount > 5 {
+		HandleInput(g)
+		g.TickCount = 0
+	}
 	return nil
 }
 
