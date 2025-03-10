@@ -174,7 +174,8 @@ func (level *Level) Draw(screen *ebiten.Image) {
 				op := &colorm.DrawImageOptions{}
 				var colorM colorm.ColorM
 				op.GeoM.Translate(float64(tile.PixelX), float64(tile.PixelY))
-				colorM.Translate(0, 0, 50, 0.75)
+				colorM.Translate(0, 0, 0, 0.30)
+				colorM.Invert() // Make tile darker
 				colorm.DrawImage(screen, tile.Image, colorM, op)
 			}
 		}

@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 type Game struct {
@@ -12,6 +13,8 @@ type Game struct {
 	Entities     []Entity
 	Player       *Entity
 	TickCount    int
+	PromptText   string
+	GameState    GameState
 }
 
 // Creates a new Game object and initializes the data.
@@ -32,6 +35,10 @@ func NewGame() *Game {
 }
 
 func (g *Game) Update() error {
+	if g.GameState == STOP {
+		return ebiten.Termination
+	}
+
 	g.TickCount++
 
 	if g.TickCount > 5 {
@@ -42,6 +49,12 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
+	if g.GameState == PROMPT {
+		if g.PromptText != "" {
+			ebitenutil.DebugPrint(screen, g.PromptText)
+		}
+	}
+
 	level := g.Levels[0]
 	level.Draw(screen)
 	RenderEntities(g, level, screen)
